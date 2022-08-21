@@ -1,6 +1,8 @@
 # A-LOAM
 ## Advanced implementation of LOAM
 
+** Modified cv code to be built, set c++ standtard to c++14 on on CMakeLists.txt, and added tum-format output code (path should be modified on the source directly **
+
 A-LOAM is an Advanced implementation of LOAM (J. Zhang and S. Singh. LOAM: Lidar Odometry and Mapping in Real-time), which uses Eigen and Ceres Solver to simplify code structure. This code is modified from LOAM and [LOAM_NOTED](https://github.com/cuitaixiang/LOAM_NOTED). This code is clean and simple without complicated mathematical derivation and redundant operations. It is a good learning material for SLAM beginners.
 
 <img src="https://github.com/HKUST-Aerial-Robotics/A-LOAM/blob/devel/picture/kitti.png" width = 55% height = 55%/>
