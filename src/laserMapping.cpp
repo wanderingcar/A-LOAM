@@ -55,6 +55,7 @@
 #include <mutex>
 #include <queue>
 #include <thread>
+#include <fstream>
 #include <iostream>
 #include <string>
 
@@ -62,6 +63,9 @@
 #include "aloam_velodyne/common.h"
 #include "aloam_velodyne/tic_toc.h"
 
+std::string file_path = "/home/dl/odom.txt";
+
+std::ofstream writeFile(file_path.data());
 
 int frameCount = 0;
 
@@ -69,7 +73,7 @@ double timeLaserCloudCornerLast = 0;
 double timeLaserCloudSurfLast = 0;
 double timeLaserCloudFullRes = 0;
 double timeLaserOdometry = 0;
-
+double mytime = 0;
 
 int laserCloudCenWidth = 10;
 int laserCloudCenHeight = 10;
@@ -264,6 +268,7 @@ void process()
 			timeLaserCloudSurfLast = surfLastBuf.front()->header.stamp.toSec();
 			timeLaserCloudFullRes = fullResBuf.front()->header.stamp.toSec();
 			timeLaserOdometry = odometryBuf.front()->header.stamp.toSec();
+			mytime = odometryBuf.front()->header.stamp.toNSec() * 10e-9;
 
 			if (timeLaserCloudCornerLast != timeLaserOdometry ||
 				timeLaserCloudSurfLast != timeLaserOdometry ||
@@ -863,6 +868,12 @@ void process()
 			odomAftMapped.pose.pose.position.y = t_w_curr.y();
 			odomAftMapped.pose.pose.position.z = t_w_curr.z();
 			pubOdomAftMapped.publish(odomAftMapped);
+
+			// export odometry
+			writeFile << std::fixed;
+			writeFile.precision(6);
+			writeFile << mytime << " " << (float) t_w_curr.x() << " " << (float) t_w_curr.y() << " " << (float) t_w_curr.z() << " " << (float) q_w_curr.x() << " " << (float) q_w_curr.y() << (float) q_w_curr.z() << " " << (float) q_w_curr.w() << "\n"; 
+
 
 			geometry_msgs::PoseStamped laserAfterMappedPose;
 			laserAfterMappedPose.header = odomAftMapped.header;
